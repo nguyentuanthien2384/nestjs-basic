@@ -3,11 +3,21 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './user/user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://thiennt2004_db_user:9Dj7ACvMxqAKeg8L@cluster0.lbolann.mongodb.net',
-    ),
+    // MongooseModule.forRoot(
+    //   'mongodb+srv://thiennt2004_db_user:9Dj7ACvMxqAKeg8L@cluster0.lbolann.mongodb.net',
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URL'),
+      }),
+      inject: [ConfigService],
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController, UserController],
   providers: [AppService],
