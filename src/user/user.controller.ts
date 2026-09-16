@@ -4,7 +4,7 @@ import { Controller, Delete, Get } from '@nestjs/common';
 export class UserController {
   @Get()
   findAll(): string {
-    return 'This action returns all users';
+    return 'This action returns all users with ntt';
   }
   @Delete('/by-id')
   findById(): string {
