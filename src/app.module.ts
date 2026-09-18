@@ -5,10 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+
 @Module({
   imports: [
-    // MongooseModule.forRoot(
-    //   'mongodb+srv://thiennt2004_db_user:9Dj7ACvMxqAKeg8L@cluster0.lbolann.mongodb.net',
+    // MongooseModule.forRoot('mongodb+srv://hoidanit:Z9bUEB7sNoatKG0j@cluster0.ls1fl27.mongodb.net/'),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -16,9 +16,11 @@ import { AuthModule } from './auth/auth.module';
       }),
       inject: [ConfigService],
     }),
+
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
     UsersModule,
     AuthModule,
   ],

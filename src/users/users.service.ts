@@ -4,23 +4,30 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import mongoose, { Model } from 'mongoose';
-import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
+import { genSaltSync, hashSync, compareSync } from 'bcryptjs';
+
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+
+  constructor(
+    @InjectModel(User.name)
+    private userModel: Model<User>
+  ) { }
+
   getHashPassword = (password: string) => {
     const salt = genSaltSync(10);
-    const hash = hashSync('B4c0//', salt);
+    const hash = hashSync(password, salt);
     return hash;
-  };
-  async create(nopiko: CreateUserDto) {
-    // async create(email: string, password: string, name: string) {
-    const hashPassword = this.getHashPassword(nopiko.password);
+  }
+
+  async create(hoidanit: CreateUserDto) {
+    const hashPassword = this.getHashPassword(hoidanit.password);
+
     let user = await this.userModel.create({
-      email: nopiko.email,
+      email: hoidanit.email,
       password: hashPassword,
-      name: nopiko.name,
-    });
+      name: hoidanit.name
+    })
     return user;
   }
 
@@ -29,33 +36,35 @@ export class UsersService {
   }
 
   findOne(id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id)) return 'not found user';
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return `not found user`;
 
     return this.userModel.findOne({
-      _id: id,
-    });
+      _id: id
+    })
   }
-  findOneByUserName(username: string) {
+
+  findOneByUsername(username: string) {
     return this.userModel.findOne({
-      email: username,
-    });
+      email: username
+    })
   }
+
+
   isValidPassword(password: string, hash: string) {
     return compareSync(password, hash);
   }
 
   async update(updateUserDto: UpdateUserDto) {
-    return await this.userModel.updateOne(
-      { _id: updateUserDto._id },
-      { ...updateUserDto },
-    );
+    return await this.userModel.updateOne({ _id: updateUserDto._id }, { ...updateUserDto })
   }
 
   remove(id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id)) return 'not found user';
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return `not found user`;
 
     return this.userModel.deleteOne({
-      _id: id,
-    });
+      _id: id
+    })
   }
 }
