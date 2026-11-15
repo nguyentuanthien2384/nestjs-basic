@@ -9,19 +9,24 @@ import { JwtStrategy } from './passport/jwt.strategy';
 import ms from 'ms';
 
 @Module({
-  imports: [UsersModule, PassportModule,
+  imports: [
+    UsersModule,
+    PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_ACCESS_TOKEN'),
         signOptions: {
-          expiresIn: ms(configService.get<string>('JWT_ACCESS_EXPIRE')),
+          expiresIn:
+            ms(
+              configService.get<string>('JWT_ACCESS_EXPIRE') as ms.StringValue,
+            ) / 1000,
         },
       }),
       inject: [ConfigService],
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService]
+  exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}
