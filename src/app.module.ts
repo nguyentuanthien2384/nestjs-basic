@@ -10,7 +10,6 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
-    // MongooseModule.forRoot('mongodb+srv://hoidanit:Z9bUEB7sNoatKG0j@cluster0.ls1fl27.mongodb.net/'),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -20,18 +19,19 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
     }),
 
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
 
     UsersModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService,
+  providers: [
+    AppService,
     // {
     //   provide: APP_GUARD,
     //   useClass: JwtAuthGuard,
     // },
   ],
 })
-export class AppModule { }
+export class AppModule {}
