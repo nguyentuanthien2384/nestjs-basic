@@ -19,13 +19,16 @@ export class UsersService {
     return hash;
   };
 
-  async create(hoidanit: CreateUserDto) {
-    const hashPassword = this.getHashPassword(hoidanit.password);
+  // create(email: string, password: string, name: string) {
+  //   return 'This action adds a new user';
+  // }
+  async create(nopiko: CreateUserDto) {
+    const hashPassword = this.getHashPassword(nopiko.password);
 
-    let user = await this.userModel.create({
-      email: hoidanit.email,
+    const user = await this.userModel.create({
+      email: nopiko.email,
       password: hashPassword,
-      name: hoidanit.name,
+      name: nopiko.name,
     });
     return user;
   }
